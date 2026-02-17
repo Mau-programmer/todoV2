@@ -60,10 +60,11 @@ function setTodos() {
         let counter = 0;
         for (const element of document.getElementsByClassName('todoNameInp')) {
             try {
-                element.nextElementSibling.value = todos[counter].prior;
+                element.nextElementSibling.value = todos.todo[counter].prior;
                 counter++;
             } catch (error) {
                 element.nextElementSibling.value = "not-urgent";
+                counter++;
             }
         }
     } else {
