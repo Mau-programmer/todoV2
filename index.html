@@ -11,6 +11,8 @@
 <body>
     <main>
         <h1>TodoV2</h1>
+        <button onclick="resetTodos()">New list</button>
+        <h2>TODO</h2>
         <ul id="todoUl">
             <li>
                 <input type="text" class="todoNameInp" placeholder="Todo....">
@@ -22,6 +24,9 @@
                 <button onclick="addTodo(this)">add</button>
             </li>
         </ul>
+        <hr>
+        <h2>Completed</h2>
+        <ul id="completedUl"></ul>
         <input type="number"><button onclick="deleteTodo(this)">delete</button>
     </main>
     <footer>

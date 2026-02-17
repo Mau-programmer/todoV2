@@ -1,5 +1,9 @@
 const todoUl = document.getElementById('todoUl');
-let todos = [];
+const compUl = document.getElementById('completedUl');
+let todos = {
+    "todo": [],
+    "completed": []
+}
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -21,7 +25,14 @@ function getCookie(cname) {
     }
     return "";
 }
-
+function resetTodos() {
+    todos = {
+        "todo": [],
+        "completed": []
+    }
+    deleteCookie('todos');
+    setTodos();
+}
 function deleteCookie(name) {
     setCookie(name, null, null)
 }
@@ -38,34 +49,44 @@ function saveTodos() {
 }
 
 function setTodos() {
-    let html = "";
-    if (todos.length === 0) {
-        attachListeners();
-        return;
-    }
-    for (const todo of todos) {
-        html += `<li><input type="text" class="todoNameInp" placeholder="Todo...." value="${todo.title}"><select name='priority' value="${todo.prior}"><option value='urgent'>urgent</option><option value='not-urgent'>not urgent</option></select ><textarea class="todoDesc" placeholder="description">${todo.desc}</textarea>                 <button onclick="addTodo(this)">add</button></li>`;
-    }
-    html += "<li><input type='text' class='todoNameInp' placeholder='Todo....''>        <select name='priority'><option value = 'urgent' > urgent</option><option value='not-urgent'>not urgent</option></select ><textarea class='todoDesc' placeholder='description'></textarea><button onclick='addTodo(this)'>add</button></li > ";
-    todoUl.innerHTML = html;
-    let counter = 0;
-    for (const element of document.getElementsByClassName('todoNameInp')) {
-        try {
-            element.nextElementSibling.value = todos[counter].prior;
-            counter++;
-        } catch (error) {
-            element.nextElementSibling.value = "not-urgent";
+
+    if (todos.todo.length > 0) {
+        let html = "";
+        for (const todo of todos.todo) {
+            html += `<li><input type="text" class="todoNameInp" placeholder="Todo...." value="${todo.title}"><select name='priority' value="${todo.prior}"><option value='urgent'>urgent</option><option value='not-urgent'>not urgent</option></select ><textarea class="todoDesc" placeholder="description">${todo.desc}</textarea>                 <button onclick="addTodo(this)">add</button></li>`;
+        }
+        html += "<li><input type='text' class='todoNameInp' placeholder='Todo....''>        <select name='priority'><option value = 'urgent' > urgent</option><option value='not-urgent'>not urgent</option></select ><textarea class='todoDesc' placeholder='description'></textarea><button onclick='addTodo(this)'>add</button></li > ";
+        todoUl.innerHTML = html;
+        let counter = 0;
+        for (const element of document.getElementsByClassName('todoNameInp')) {
+            try {
+                element.nextElementSibling.value = todos[counter].prior;
+                counter++;
+            } catch (error) {
+                element.nextElementSibling.value = "not-urgent";
+            }
+        }
+    } else {
+        todoUl.innerHTML = "<li><input type='text' class='todoNameInp' placeholder='Todo....''>        <select name='priority'><option value = 'urgent' > urgent</option><option value='not-urgent'>not urgent</option></select ><textarea class='todoDesc' placeholder='description'></textarea><button onclick='addTodo(this)'>add</button></li >";
+    } if (todos.completed.length > 0) {
+        for (const item of todos.completed) {
+            let html = "";
+            html += `<li><input type="text" class="todoNameInp" disabled placeholder="Todo...." value="${item.title}"><p>Urgency: ${item.prior}</p><textarea class="todoDesc" placeholder="description" disabled>${item.desc}</textarea><button onclick="addTodo(this)">add</button></li>`;
+            compUl.innerHTML = html;
         }
 
+    } else {
+        compUl.innerHTML = "";
     }
     attachListeners();
 }
 function deleteTodo(btn) {
-    if (btn.previousElementSibling.value <= 0 || btn.previousElementSibling.value > todos.length) {
+    if ((btn.previousElementSibling.value <= 0 || btn.previousElementSibling.value > todos.todo.length) && todos.todo.length === 0) {
         btn.previousElementSibling.value = "";
         return;
     }
-    todos.splice(todos[btn.previousElementSibling.value - 1], 1)
+    let todo = todos.todo.splice(todos[btn.previousElementSibling.value - 1], 1);
+    todos.completed.push(todo[0]);
     setTodos();
     saveTodos();
 }
@@ -78,7 +99,7 @@ function addTodo(btn) {
         "prior": select.value
     };
 
-    todos.push(values);
+    todos.todo.push(values);
     saveTodos();
     setTodos();
 }
@@ -95,7 +116,7 @@ function attachListeners() {
                     "prior": select.value
                 };
 
-                todos.push(values);
+                todos.todo.push(values);
                 saveTodos();
                 setTodos();
 
