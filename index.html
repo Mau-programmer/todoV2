@@ -5,16 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New todo list</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>TodoV2</h1>
-    <ul id="todoUl">
-        <li>
-            <input type="text" class="todoNameInp" placeholder="Todo....">
-            <textarea class="todoDesc" placeholder="description"></textarea>
-        </li>
-    </ul>
+    <main>
+        <h1>TodoV2</h1>
+        <ul id="todoUl">
+            <li>
+                <input type="text" class="todoNameInp" placeholder="Todo....">
+                <textarea class="todoDesc" placeholder="description"></textarea>
+                <button onclick="addTodo(this)">add</button>
+            </li>
+        </ul>
+        <input type="number"><button onclick="deleteTodo(this)">delete</button>
+    </main>
+
     <script src="app.js"></script>
 </body>
 

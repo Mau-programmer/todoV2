@@ -40,16 +40,36 @@ function saveTodos() {
 function setTodos() {
     let html = "";
     if (todos.length === 0) {
+        attachListeners();
         return;
     }
     for (const todo of todos) {
-        html += `<li><input type="text" class="todoNameInp" placeholder="Todo...." value="${todo.title}"><textarea class="todoDesc" placeholder="description">${todo.desc}</textarea></li>`;
+        html += `<li><input type="text" class="todoNameInp" placeholder="Todo...." value="${todo.title}"><textarea class="todoDesc" placeholder="description">${todo.desc}</textarea>                 <button onclick="addTodo(this)">add</button></li>`;
     }
-    html += "<li><input type='text' class='todoNameInp' placeholder='Todo....''><textarea class='todoDesc' placeholder='description'></textarea></li>";
+    html += "<li><input type='text' class='todoNameInp' placeholder='Todo....''><textarea class='todoDesc' placeholder='description'></textarea><button onclick='addTodo(this)'>add</button></li>";
     todoUl.innerHTML = html;
     attachListeners();
 }
+function deleteTodo(btn) {
+    if (btn.previousElementSibling.value <= 0 || btn.previousElementSibling.value > todos.length) {
+        btn.previousElementSibling.value = "";
+        return;
+    }
+    todos.splice(todos[btn.previousElementSibling.value - 1], 1)
+    setTodos();
+    saveTodos();
+}
+function addTodo(btn) {
+    let desc = btn.previousElementSibling;
+    let values = {
+        "title": desc.previousElementSibling.value,
+        "desc": desc.value
+    };
 
+    todos.push(values);
+    saveTodos();
+    setTodos();
+}
 function attachListeners() {
 
     for (const inp of document.getElementsByClassName('todoNameInp')) {
@@ -63,11 +83,9 @@ function attachListeners() {
                 todos.push(values);
                 saveTodos();
                 setTodos();
-                e.preventDefault();
+
             }
         })
     }
 }
-getTodos()
-    ; setTodos();
-attachListeners();
+getTodos(); setTodos();
